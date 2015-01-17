@@ -24,7 +24,36 @@ class Faucet:
     # database file name
     _filename = "doge.db"
     def __init__(self):
+        """ Create a new Faucet """
+        
+        self._logger = logging.getLogger(__name__)
+        self._logger.info("Creating class")
+        
+        # initialite connections
+        self._connection = sqlite3.connect(self._filename)
+        self._connection.row_factory = sqlite3.Row
+        self._logger.info(self._connection.isolation_level)
+        
+        # set error messag to empty
+        self.message = ""
         pass
+
+    def __del__(self):
+        """ Destructor, close connections, clean up, etc. """
+        self._logger.info("Deleting")
+        self._connection.close()
+
+    def __enter__(self):
+        """ Gets autmatically called on the beginning of a with statement """
+        return self
+        pass
+
+    def __exit__(self, type, value, traceback):
+        """ Gets autmatically called on the end of a with statement """
+        self._logger.info("Exiting")
+        self._connection.close()
+        pass
+        
         
     # todo: Lock, to avoid double-adding from multiple conections ?
     def add_payout_request(self,  address, force=False):
@@ -60,4 +89,5 @@ class Faucet:
 
 if __name__ == '__main__':
     print "Not callable"
-    Faucet.check_address_validity("x")
+    with Faucet() as fau:
+        pass
