@@ -61,7 +61,18 @@ class Faucet:
         
         Returns True if payout was added, otherwise false """
         # waiting: datetime, address
-        pass
+        
+        is_ok = True
+        if not force:
+            is_ok = self.check_payout_request(address)
+        
+        if is_ok:
+            self._connection.execute("INSERT INTO waiting (datetime, address) VALUES (?, ?)", 
+                                       (datetime.datetime.utcnow().strftime("%d.%m.%y %H:%M:%S"), 
+                                        address))
+            self._connection.commit()
+        return is_ok
+     
         
     def check_payout_request(self, address):
         """ Check if address is eligible for a payout request
