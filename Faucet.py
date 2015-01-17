@@ -9,12 +9,15 @@ import requests
 # logging!
 import logging
 
+import random
+import string
+
 # wallet processings
 from block_io import BlockIo
 
 logging.basicConfig(level=logging.INFO)
 
-__version__ = "0.1"
+__version__ = "0.2"
 
 class Faucet:
     """ Faucet class
@@ -62,11 +65,15 @@ class Faucet:
         Returns True if payout was added, otherwise false """
         # waiting: datetime, address
         
+        self._logger.info("Adding payment request for %s", address)
         is_ok = True
         if not force:
             is_ok = self.check_payout_request(address)
+        else:
+            self._logger.info("Force-Adding payment request for %s", address)
         
         if is_ok:
+            self._logger.info("Inserting payment request for %s", address)
             self._connection.execute("INSERT INTO waiting (datetime, address) VALUES (?, ?)", 
                                        (datetime.datetime.utcnow().strftime("%d.%m.%y %H:%M:%S"), 
                                         address))
@@ -79,13 +86,16 @@ class Faucet:
         
         Returns True if payout request is okay, otherwise False"""
         
+        self._logger.info("Checking payment request for %s", address)
         # waiting: datetime, address
         cu = self._connection.execute("SELECT * FROM waiting WHERE address=?", (address, ));
         ro = cu.fetchone()
         if not ro:
+            self._logger.info("Address is not yet in database")
             return True
         else:
             self.message = "Address %s was already added at %s" % (ro["address"], ro["datetime"])
+            self._logger.info(self.message)
             return False
     
     # TODO    
@@ -109,6 +119,17 @@ class Faucet:
         pass
 
 if __name__ == '__main__':
-    print "Not callable"
+    # test code
     with Faucet() as fau:
+        fau.check_payout_request("X")
+        x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+        if x:
+            fau.add_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+            fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+        
+        randomaddress = "D"+''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(33))
+        x = fau.check_payout_request(randomaddress)
+        if x:
+            fau.add_payout_request(randomaddress)
+            fau.check_payout_request(randomaddress)
         pass
