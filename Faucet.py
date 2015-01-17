@@ -104,6 +104,17 @@ class Faucet:
         
         # processed: datetime, payout, number_addresses, txid
         # processed_addresses: address, process_id (FK)
+
+        # 1) Get all addresses from waiting, store them
+        # 2) Delete all addresses from waiting
+        #    !! What if another connections adds their address as exactly this point?
+        # 3) Create transmission on block.io with all the waiting addresses
+        # 4) Add transaction to processed, get id
+        # 5) Insert all waiting addresses with FK into processed_addresses
+
+        # This has to be executed as a whole transaction somehow. What if something goes wrong along the way?
+        # e.g. transaction on block.io failing?
+
         pass
         
     # TODO
