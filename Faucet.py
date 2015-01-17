@@ -68,6 +68,16 @@ class Faucet:
         
         Returns True if payout request is okay, otherwise False"""
         
+        # waiting: datetime, address
+        cu = self._connection.execute("SELECT * FROM waiting WHERE address=?", (address, ));
+        ro = cu.fetchone()
+        if not ro:
+            return True
+        else:
+            self.message = "Address %s was already added at %s" % (ro["address"], ro["datetime"])
+            return False
+    
+    # TODO    
     def process_payouts(self, address):
         """ (TODO) process the payout requests """
         
