@@ -14,8 +14,6 @@ import string
 
 logging.basicConfig(level=logging.INFO)
 
-__version__ = "0.2"
-
 class Faucet:
     """ Faucet class
     
