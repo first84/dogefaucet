@@ -115,19 +115,19 @@ class Faucet:
         # This has to be executed as a whole transaction somehow. What if something goes wrong along the way?
         # e.g. transaction on block.io failing?
 
-        pass
+        raise NotImplementedError("Not implemented yet")
         
     # TODO
     def get_balance(self):
         """ (TODO) Get faucet balance """
         # balance: datetime, amount
-        pass
+        raise NotImplementedError("Not implemented yet")
 
     #TODO
     @staticmethod
     def check_address_validity(address):
         """ (TODO) check if address is valid """
-        pass
+        raise NotImplementedError("Not implemented yet")
 
 if __name__ == '__main__':
     # test code
