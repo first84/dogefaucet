@@ -39,7 +39,6 @@ class Faucet:
         # or a with statement, for that matter?
         self._connection = sqlite3.connect(self._filename)
         self._connection.row_factory = sqlite3.Row
-        self._logger.info(self._connection.isolation_level)
         
         # set error messag to empty
         self.message = ""
