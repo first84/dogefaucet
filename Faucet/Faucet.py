@@ -12,9 +12,6 @@ import logging
 import random
 import string
 
-# wallet processings
-from block_io import BlockIo
-
 logging.basicConfig(level=logging.INFO)
 
 __version__ = "0.2"
