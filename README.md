@@ -6,7 +6,7 @@ This is an attempt to write a dogecoin faucet in Python.
 ## (Planned) Dependencies
 
  - Python2 >=2.6 (Python 3?)
- - [block_io == 1.1.2](https://block.io/api/simple/python)
+ - ( [block_io == 1.1.2](https://block.io/api/simple/python) ) not strictly necessary
  - sqlite3 (should be included in python)
  - requests (definitely >= 1.0, because Response.json() is called as a method)
 
