@@ -33,6 +33,10 @@ class Faucet:
         self._logger.info("Creating class")
         
         # initialite connections
+        
+        # TODO: Is it "safe" to store a connection as instance 
+        # attribute? would it be better to do a try/catch every time?
+        # or a with statement, for that matter?
         self._connection = sqlite3.connect(self._filename)
         self._connection.row_factory = sqlite3.Row
         self._logger.info(self._connection.isolation_level)
