@@ -104,11 +104,11 @@ class Faucet:
         # processed_addresses: address, process_id (FK)
 
         # 1) Get all addresses from waiting, store them
-        # 2) Delete results from 1) from waiting
+        # 2) Delete results from 1) from waiting (executemany?)
         # 3) Check for duplicate addresses, remove them
         # 4) Create transmission on block.io with all the waiting addresses
         # 5) Add transaction to processed, get id
-        # 6) Insert all waiting addresses with FK into processed_addresses
+        # 6) Insert all waiting addresses with FK into processed_addresses (executemany!)
 
         # This has to be executed as a whole transaction somehow. What if something goes wrong along the way?
         # e.g. transaction on block.io failing?
