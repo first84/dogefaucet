@@ -103,7 +103,7 @@ class Faucet:
         # processed: datetime, payout, number_addresses, txid
         # processed_addresses: address, process_id (FK)
 
-        # 1) Get all addresses from waiting, store them
+        # 1) Get all addresses from waiting, store them (GROUP BY address is a great way to avoid dupes!?)
         # 2) Delete results from 1) from waiting (executemany?)
         # 3) Check for duplicate addresses, remove them
         # 4) Create transmission on block.io with all the waiting addresses
