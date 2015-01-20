@@ -33,5 +33,13 @@ class AbstractPaymentProcessor:
          - False if unconfirmed
          - None if transaction doesn't exist (or raise exception?)"""
         pass
+
+    @abstractmethod
+    def get_available_balance(self):
+        """ Get the available balance
+
+        i.e. how much "cash" is in the faucet """
+        pass
+
     
     
