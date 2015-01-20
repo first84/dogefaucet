@@ -34,6 +34,7 @@ class DummyLoggingPaymentProcessor (AbstractPaymentProcessor):
         raise NotImplementedError("Not implemented yet")
     
 
-# can instanciate, although get_balance is not defined. Why? abc should prevent this!?
-c = DummyLoggingPaymentProcessor()
-c.get_available_balance()
+if __name__ == '__main__':
+    # can instanciate, although get_balance is not defined. Why? abc should prevent this!?
+    c = DummyLoggingPaymentProcessor()
+    c.get_available_balance()
