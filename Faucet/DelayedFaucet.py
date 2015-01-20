@@ -23,7 +23,7 @@ class DelayedFaucet (AbstractFaucet):
 
     # database file name
     _filename = "doge.db"
-    def __init__(self):
+    def __init__(self, payment_processor):
         """ Create a new Faucet """
         
         self._logger = logging.getLogger(__name__)
@@ -39,6 +39,8 @@ class DelayedFaucet (AbstractFaucet):
         
         # set error messag to empty
         self.message = ""
+
+        self._payment_processor = payment_processor
         pass
 
     def __del__(self):
@@ -138,9 +140,9 @@ class DelayedFaucet (AbstractFaucet):
     # web services) - I'd have to create a CachedPaymentProcessor or something 
     # similar? or do the caching here?
     def get_balance(self):
-        """ (TODO) Get faucet balance """
+        """ Get faucet balance """
         # balance: datetime, amount
-        raise NotImplementedError("Not implemented yet")
+        self._payment_processor.get_available_balance()
 
     #TODO
     @staticmethod
