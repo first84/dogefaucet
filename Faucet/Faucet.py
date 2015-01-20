@@ -77,8 +77,12 @@ class Faucet:
         
         if is_ok:
             self._logger.info("Inserting payment request for %s", address)
-            self._connection.execute("INSERT INTO waiting (datetime, address) VALUES (?, ?)", 
-                                       (datetime.datetime.utcnow().strftime("%d.%m.%y %H:%M:%S"), 
+            # to avoid ugly long line
+            unow = datetime.datetime.utcnow()
+            # TODO: Try/except!
+            self._connection.execute("INSERT INTO waiting (datetime, address)"
+                                        " VALUES (?, ?)", 
+                                     (unow.strftime("%d.%m.%y %H:%M:%S"), 
                                         address))
             self._connection.commit()
         return is_ok
@@ -91,13 +95,15 @@ class Faucet:
         
         self._logger.info("Checking payment request for %s", address)
         # waiting: datetime, address
-        cu = self._connection.execute("SELECT * FROM waiting WHERE address=?", (address, ));
+        cu = self._connection.execute("SELECT * FROM waiting WHERE address=?", 
+                                        (address, ));
         ro = cu.fetchone()
         if not ro:
             self._logger.info("Address is not yet in database")
             return True
         else:
-            self.message = "Address %s was already added at %s" % (ro["address"], ro["datetime"])
+            self.message = "Address %s was already added at %s" % \
+                                    (ro["address"], ro["datetime"])
             self._logger.info(self.message)
             return False
     
@@ -108,15 +114,19 @@ class Faucet:
         # processed: datetime, payout, number_addresses, txid
         # processed_addresses: address, process_id (FK)
 
-        # 1) Get all addresses from waiting, store them (GROUP BY address is a great way to avoid dupes!?)
+        # 1) Get all addresses from waiting, store them (GROUP BY address is a
+        #    great way to avoid dupes!?)
         # 2) Delete results from 1) from waiting (executemany?)
         # 3) Check for duplicate addresses, remove them
         # 4) Create transmission on block.io with all the waiting addresses
         # 5) Add transaction to processed, get id
-        # 6) Insert all waiting addresses with FK into processed_addresses (executemany!)
+        # 6) Insert all waiting addresses with FK into processed_addresses 
+        #    (executemany!)
 
-        # This has to be executed as a whole transaction somehow. What if something goes wrong along the way?
+        # This has to be executed as a whole transaction somehow. What if 
+        # something goes wrong along the way?
         # e.g. transaction on block.io failing?
+        
 
         raise NotImplementedError("Not implemented yet")
         
