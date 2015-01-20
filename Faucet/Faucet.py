@@ -55,6 +55,11 @@ class Faucet:
         self._connection.close()
         pass
         
+    def createDb(self, path):
+        """ Creates / Initializes the database """
+        self._logger.info("Create database")
+        statements=open(path).read()
+        self._connection.executescript(statements)
         
     # todo: Lock, to avoid double-adding from multiple conections ?
     def add_payout_request(self,  address, force=False):
