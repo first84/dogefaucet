@@ -1,5 +1,6 @@
 """ This is going to be a dogecoin faucet """
 
+from AbstractFaucet import AbstractFaucet
 # Database support
 import sqlite3
 # date / time calculations
@@ -14,7 +15,7 @@ import string
 
 logging.basicConfig(level=logging.INFO)
 
-class Faucet:
+class Faucet (AbstractFaucet):
     """ Faucet class
     
     Contains all methods neccessary to execute a faucet """
@@ -62,7 +63,7 @@ class Faucet:
         self._connection.executescript(statements)
         
     # todo: Lock, to avoid double-adding from multiple conections ?
-    def add_payout_request(self,  address, force=False):
+    def request_payout(self,  address, force=False):
         """ add an address to the payout 
         
         Returns True if payout was added, otherwise false """
@@ -154,7 +155,7 @@ if __name__ == '__main__':
             fau.check_payout_request("X")
             x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
             if x:
-                fau.add_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+                fau.request_payout("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
                 fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
             
             randomaddress = "D"+''.join(random.choice(string.ascii_uppercase + 
@@ -163,7 +164,7 @@ if __name__ == '__main__':
                                         for _ in range(33))
             x = fau.check_payout_request(randomaddress)
             if x:
-                fau.add_payout_request(randomaddress)
+                fau.request_payout(randomaddress)
                 fau.check_payout_request(randomaddress)
             pass
         
