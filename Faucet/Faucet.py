@@ -131,6 +131,10 @@ class Faucet:
         raise NotImplementedError("Not implemented yet")
         
     # TODO
+    # Question: should this call a PaymentProcessor method? What if I want to 
+    # "cache" the balance in the sqlite database? (avoid extensive API calls to 
+    # web services) - I'd have to create a CachedPaymentProcessor or something 
+    # similar? or do the caching here?
     def get_balance(self):
         """ (TODO) Get faucet balance """
         # balance: datetime, amount
@@ -144,16 +148,27 @@ class Faucet:
 
 if __name__ == '__main__':
     # test code
-    with Faucet() as fau:
-        fau.check_payout_request("X")
-        x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
-        if x:
-            fau.add_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
-            fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+    try:
+        with Faucet() as fau:
+            fau.createDb("../dogemodel.sql")
+            fau.check_payout_request("X")
+            x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+            if x:
+                fau.add_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+                fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
+            
+            randomaddress = "D"+''.join(random.choice(string.ascii_uppercase + 
+                                                        string.ascii_lowercase 
+                                                        + string.digits) 
+                                        for _ in range(33))
+            x = fau.check_payout_request(randomaddress)
+            if x:
+                fau.add_payout_request(randomaddress)
+                fau.check_payout_request(randomaddress)
+            pass
         
-        randomaddress = "D"+''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(33))
-        x = fau.check_payout_request(randomaddress)
-        if x:
-            fau.add_payout_request(randomaddress)
-            fau.check_payout_request(randomaddress)
-        pass
+        #if sys.platform == "win32":
+    except Exception, e:
+        logging.getLogger(__name__).error("Exception occurred %s", e)
+        
+    raw_input("Press Enter to close") # Python 
