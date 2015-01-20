@@ -8,7 +8,7 @@ from AbstractPaymentProcessor import AbstractPaymentProcessor
 class DummyLoggingPaymentProcessor (AbstractPaymentProcessor):
     """ Payment processor that does nothing, just logs """
 
-    def __new__(self):
+    def __init__(self):
         self._logger = logging.getLogger(__name__)
         self._logger.setLevel(logging.INFO)
     
