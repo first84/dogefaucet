@@ -15,10 +15,11 @@ import string
 
 logging.basicConfig(level=logging.INFO)
 
-class Faucet (AbstractFaucet):
-    """ Faucet class
+class DelayedFaucet (AbstractFaucet):
+    """Delayed Faucet class
     
-    Contains all methods neccessary to execute a faucet """
+    Implements a delayed faucet, backed by sqlite
+    """
 
     # database file name
     _filename = "doge.db"
@@ -150,7 +151,7 @@ class Faucet (AbstractFaucet):
 if __name__ == '__main__':
     # test code
     try:
-        with Faucet() as fau:
+        with DelayedFaucet() as fau:
             fau.createDb("../dogemodel.sql")
             fau.check_payout_request("X")
             x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
