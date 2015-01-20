@@ -2,6 +2,7 @@
 
 import logging
 import random
+logging.basicConfig(level=logging.INFO)
 
 from AbstractPaymentProcessor import AbstractPaymentProcessor
 
@@ -10,7 +11,6 @@ class DummyLoggingPaymentProcessor (AbstractPaymentProcessor):
 
     def __init__(self):
         self._logger = logging.getLogger(__name__)
-        self._logger.setLevel(logging.INFO)
     
     def execute_payment(self, destination_address, amount):
         """ Execute a payment to one receiving single address
@@ -32,9 +32,13 @@ class DummyLoggingPaymentProcessor (AbstractPaymentProcessor):
          - False if unconfirmed
          - None if transaction doesn't exist """
         raise NotImplementedError("Not implemented yet")
+
+    def get_available_balance(self):
+        amount = random.randint(0,1500)
+        self._logger.info("Balance is %d", amount)
+        return amount
     
 
 if __name__ == '__main__':
-    # can instanciate, although get_balance is not defined. Why? abc should prevent this!?
     c = DummyLoggingPaymentProcessor()
     c.get_available_balance()
