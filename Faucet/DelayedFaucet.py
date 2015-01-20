@@ -1,6 +1,8 @@
 """ This is going to be a dogecoin faucet """
 
 from AbstractFaucet import AbstractFaucet
+from DummyPaymentProcessor import DummyLoggingPaymentProcessor
+
 # Database support
 import sqlite3
 # date / time calculations
@@ -153,7 +155,7 @@ class DelayedFaucet (AbstractFaucet):
 if __name__ == '__main__':
     # test code
     try:
-        with DelayedFaucet() as fau:
+        with DelayedFaucet(DummyLoggingPaymentProcessor()) as fau:
             fau.createDb("../dogemodel.sql")
             fau.check_payout_request("X")
             x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
