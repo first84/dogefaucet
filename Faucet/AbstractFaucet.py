@@ -20,7 +20,7 @@ class AbstractFaucet:
     def process_payouts(self):
         """ Execute / process a payout """
         pass
-    
+
     @abstractmethod
     def get_balance(self):
         """ Get available "cash" """

@@ -23,7 +23,7 @@ class AbstractPaymentProcessor:
         
         return the transaction id or None """
         pass
-        
+
     @abstractmethod
     def get_transaction_status(self):
         """ Get the status of the transaction
@@ -40,6 +40,3 @@ class AbstractPaymentProcessor:
 
         i.e. how much "cash" is in the faucet """
         pass
-
-    
-    

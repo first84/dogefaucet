@@ -31,7 +31,7 @@ class DelayedFaucet (AbstractFaucet):
         
         # initialite connections
         
-        # TODO: Is it "safe" to store a connection as instance 
+        # TODO: Is it "safe" to store a connection as instance
         # attribute? would it be better to do a try/catch every time?
         # or a with statement, for that matter?
         self._connection = sqlite3.connect(self._filename)
@@ -56,16 +56,16 @@ class DelayedFaucet (AbstractFaucet):
         self._logger.info("Exiting")
         self._connection.close()
         pass
-        
+
     def createDb(self, path):
         """ Creates / Initializes the database """
         self._logger.info("Create database")
         statements=open(path).read()
         self._connection.executescript(statements)
-        
+
     # todo: Lock, to avoid double-adding from multiple conections ?
     def request_payout(self,  address, force=False):
-        """ add an address to the payout 
+        """ add an address to the payout
         
         Returns True if payout was added, otherwise false """
         # waiting: datetime, address
@@ -83,13 +83,12 @@ class DelayedFaucet (AbstractFaucet):
             unow = datetime.datetime.utcnow()
             # TODO: Try/except!
             self._connection.execute("INSERT INTO waiting (datetime, address)"
-                                        " VALUES (?, ?)", 
-                                     (unow.strftime("%d.%m.%y %H:%M:%S"), 
+                                        " VALUES (?, ?)",
+                                     (unow.strftime("%d.%m.%y %H:%M:%S"),
                                         address))
             self._connection.commit()
         return is_ok
-     
-        
+
     def check_payout_request(self, address):
         """ Check if address is eligible for a payout request
         
@@ -97,7 +96,7 @@ class DelayedFaucet (AbstractFaucet):
         
         self._logger.info("Checking payment request for %s", address)
         # waiting: datetime, address
-        cu = self._connection.execute("SELECT * FROM waiting WHERE address=?", 
+        cu = self._connection.execute("SELECT * FROM waiting WHERE address=?",
                                         (address, ));
         ro = cu.fetchone()
         if not ro:
@@ -108,8 +107,8 @@ class DelayedFaucet (AbstractFaucet):
                                     (ro["address"], ro["datetime"])
             self._logger.info(self.message)
             return False
-    
-    # TODO    
+
+        # TODO
     def process_payouts(self, address):
         """ (TODO) process the payout requests """
         
@@ -122,20 +121,19 @@ class DelayedFaucet (AbstractFaucet):
         # 3) Check for duplicate addresses, remove them
         # 4) Create transmission on block.io with all the waiting addresses
         # 5) Add transaction to processed, get id
-        # 6) Insert all waiting addresses with FK into processed_addresses 
+        # 6) Insert all waiting addresses with FK into processed_addresses
         #    (executemany!)
 
-        # This has to be executed as a whole transaction somehow. What if 
+        # This has to be executed as a whole transaction somehow. What if
         # something goes wrong along the way?
         # e.g. transaction on block.io failing?
         
-
         raise NotImplementedError("Not implemented yet")
-        
+
     # TODO
-    # Question: should this call a PaymentProcessor method? What if I want to 
-    # "cache" the balance in the sqlite database? (avoid extensive API calls to 
-    # web services) - I'd have to create a CachedPaymentProcessor or something 
+    # Question: should this call a PaymentProcessor method? What if I want to
+    # "cache" the balance in the sqlite database? (avoid extensive API calls to
+    # web services) - I'd have to create a CachedPaymentProcessor or something
     # similar? or do the caching here?
     def get_balance(self):
         """ (TODO) Get faucet balance """
@@ -159,9 +157,9 @@ if __name__ == '__main__':
                 fau.request_payout("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
                 fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
             
-            randomaddress = "D"+''.join(random.choice(string.ascii_uppercase + 
-                                                        string.ascii_lowercase 
-                                                        + string.digits) 
+            randomaddress = "D"+''.join(random.choice(string.ascii_uppercase +
+                                                        string.ascii_lowercase
+                                                        + string.digits)
                                         for _ in range(33))
             x = fau.check_payout_request(randomaddress)
             if x:
@@ -173,4 +171,4 @@ if __name__ == '__main__':
     except Exception, e:
         logging.getLogger(__name__).error("Exception occurred %s", e)
         
-    raw_input("Press Enter to close") # Python 
+    raw_input("Press Enter to close") # Python
