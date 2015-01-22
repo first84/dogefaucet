@@ -17,3 +17,10 @@ This is an attempt to write a dogecoin faucet in Python.
 - Process payments (using block.io)
     * maybe create seperate PaymentProcessor class,
       to support diffent online (or private, via RPC) wallets
+
+## License
+
+I have not yet decided on a license, IANAL, but I somehow
+lean towards GPL. No idea how this works for web applications
+when it comes to the term "distribution".... Suggestions are 
+welcome.
