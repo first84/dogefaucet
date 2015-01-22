@@ -26,14 +26,33 @@ class BlockIoPaymentProcessor(AbstractPaymentProcessor):
     def execute_payment(self, destination_address, amount):
         """ Execute a payment to one receiving single address
         
+        Keyword arguments:
+        destination_address -- addresses to sens to, string
+        amount -- amount to send, string
+
         return the transaction id or None """
-        raise NotImplementedError("Not implemented yet")
+
+        # simply redirect call
+        return self.execute_multi_payment(destination_address, amount)
 
     def execute_multi_payment(self, destination_addresses, amounts):
         """ Execute a payment to multiple receiving addresses
         
-        return the transaction id or None """
-        raise NotImplementedError("Not implemented yet")
+        return the transaction id or None
+
+        Keyword arguments:
+        destination_addresses -- comma separated ("," NOT ", ") addresses, string
+        amounts -- amounts to send - string
+
+        Number of values for destination_addresses must equal that one of
+        amounts"""
+        reply = self._block_io.withdraw(amounts=amounts,
+                                        to_addresses=destination_addresses)
+        if reply["status"] == "success":
+            return reply["data"]["txid"]
+        else:
+            # no idea
+            pass
 
     def get_transaction_status(self):
         """ Get the status of the transaction
