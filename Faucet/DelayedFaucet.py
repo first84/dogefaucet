@@ -120,19 +120,29 @@ class DelayedFaucet (AbstractFaucet):
 
         # TODO
 
-    def process_payouts(self, address):
+    def process_payouts(self):
         """ (TODO) process the payout requests """
         
         # processed: datetime, payout, number_addresses, txid
         # processed_addresses: address, process_id (FK)
+        # waiting: datetime, address
 
         # 1) Get all addresses from waiting, store them (GROUP BY address is a
         #    great way to avoid dupes!?)
-        # 2) Delete results from 1) from waiting (executemany?)
-        # 3) Check for duplicate addresses, remove them
-        # 4) Create transmission on block.io with all the waiting addresses
-        # 5) Add transaction to processed, get id
-        # 6) Insert all waiting addresses with FK into processed_addresses
+        cu = self._connection.execute("SELECT address FROM waiting" \
+                                        " GROUP BY address;");
+        data = cu.fetchall()
+        # no data? - throw exception?
+        if not data:
+            return
+
+        addresses = map(lambda x: x["address"], data)
+
+        # 2) Create transmission on block.io with all the waiting addresses
+
+        # 3) Delete results from 1) from waiting (executemany?)
+        # 4) Add transaction to processed, get id
+        # 5) Insert all waiting addresses with FK into processed_addresses
         #    (executemany!)
 
         # This has to be executed as a whole transaction somehow. What if
