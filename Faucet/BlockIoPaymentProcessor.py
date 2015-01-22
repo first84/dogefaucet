@@ -16,6 +16,9 @@ class BlockIoPaymentProcessor(AbstractPaymentProcessor):
     
     def __init__(self):
         self._logger = logging.getLogger(__name__)
+        self._logger.propagate = False
+        self._logger.setLevel(logging.INFO)
+        self._logger.addHandler(logging.FileHandler("faucet.log"))
         self._logger.info("Creating BlockIoPaymentProcessor instance")
         self._block_io = BlockIo(blockioconfig.apikey, blockioconfig.secretpin,
                                     apiversion)
@@ -48,6 +51,8 @@ class BlockIoPaymentProcessor(AbstractPaymentProcessor):
 
         address -- Adress to get balance from. Valid address or None for total
                     balance"""
+
+        self._logger.info("Get balance")
         reply=None
         if address:
             reply = self._block_io.get_address_balance(addresses=address)
