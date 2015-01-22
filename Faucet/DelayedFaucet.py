@@ -13,11 +13,10 @@ import logging
 import random
 import string
 
-logging.basicConfig(level=logging.INFO)
 
 class DelayedFaucet (AbstractFaucet):
     """Delayed Faucet class
-    
+
     Implements a delayed faucet, backed by sqlite
     """
 
@@ -27,6 +26,9 @@ class DelayedFaucet (AbstractFaucet):
         """ Create a new Faucet """
         
         self._logger = logging.getLogger(__name__)
+        self._logger.propagate = False
+        self._logger.setLevel(logging.INFO)
+        self._logger.addHandler(logging.FileHandler("faucet.log"))
         self._logger.info("Creating class")
         
         # initialite connections
@@ -74,6 +76,7 @@ class DelayedFaucet (AbstractFaucet):
         is_ok = True
         if not force:
             is_ok = self.check_payout_request(address)
+            self._logger.info("Checking request said %s", is_ok)
         else:
             self._logger.info("Force-Adding payment request for %s", address)
         
@@ -109,6 +112,7 @@ class DelayedFaucet (AbstractFaucet):
             return False
 
         # TODO
+
     def process_payouts(self, address):
         """ (TODO) process the payout requests """
         
