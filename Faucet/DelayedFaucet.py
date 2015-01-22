@@ -13,6 +13,7 @@ import logging
 import random
 import string
 
+from BlockIoPaymentProcessor import BlockIoPaymentProcessor
 
 class DelayedFaucet (AbstractFaucet):
     """Delayed Faucet class
@@ -22,9 +23,13 @@ class DelayedFaucet (AbstractFaucet):
 
     # database file name
     _filename = "doge.db"
-    def __init__(self):
-        """ Create a new Faucet """
-        
+    def __init__(self, payment_processor):
+        """ Create a new delayed Faucet
+
+        Keyword arguments:
+
+        payment_processor - specifies a payment processor"""
+
         self._logger = logging.getLogger(__name__)
         self._logger.propagate = False
         self._logger.setLevel(logging.INFO)
@@ -41,6 +46,8 @@ class DelayedFaucet (AbstractFaucet):
         
         # set error messag to empty
         self.message = ""
+
+        self._payment_processor = payment_processor
         pass
 
     def __del__(self):
@@ -142,7 +149,7 @@ class DelayedFaucet (AbstractFaucet):
     def get_balance(self):
         """ (TODO) Get faucet balance """
         # balance: datetime, amount
-        raise NotImplementedError("Not implemented yet")
+        return self._payment_processor.get_available_balance()
 
     #TODO
     @staticmethod
@@ -153,7 +160,7 @@ class DelayedFaucet (AbstractFaucet):
 if __name__ == '__main__':
     # test code
     try:
-        with DelayedFaucet() as fau:
+        with DelayedFaucet(BlockIoPaymentProcessor()) as fau:
             fau.createDb("../dogemodel.sql")
             fau.check_payout_request("X")
             x = fau.check_payout_request("DDuMLYg7PA7QVxqFp8qUiB46CdmAmcBC2s")
@@ -169,7 +176,8 @@ if __name__ == '__main__':
             if x:
                 fau.request_payout(randomaddress)
                 fau.check_payout_request(randomaddress)
-            pass
+            print "Available balance: %f" % fau.get_balance()
+
         
         #if sys.platform == "win32":
     except Exception, e:
