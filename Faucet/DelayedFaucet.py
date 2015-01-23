@@ -1,6 +1,8 @@
 """ This is going to be a dogecoin faucet """
 
 from AbstractFaucet import AbstractFaucet
+from DummyPaymentProcessor import DummyLoggingPaymentProcessor
+
 # Database support
 import sqlite3
 # date / time calculations
@@ -157,7 +159,7 @@ class DelayedFaucet (AbstractFaucet):
     # web services) - I'd have to create a CachedPaymentProcessor or something
     # similar? or do the caching here?
     def get_balance(self):
-        """ (TODO) Get faucet balance """
+        """ Get faucet balance """
         # balance: datetime, amount
         return self._payment_processor.get_available_balance()
 
