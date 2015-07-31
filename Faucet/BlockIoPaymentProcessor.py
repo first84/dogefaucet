@@ -7,6 +7,8 @@ from block_io import BlockIo
 import blockioconfig
 apiversion = 2 # API version
 
+import  simplejson.scanner
+
 from AbstractPaymentProcessor import AbstractPaymentProcessor
 
 import abc
@@ -88,5 +90,29 @@ class BlockIoPaymentProcessor(AbstractPaymentProcessor):
     
 if __name__ == "__main__":
     b=BlockIoPaymentProcessor()
-    rep = b.get_available_balance()
-    print "%f" % (rep, )
+    success = False
+    #blockio has hiccups
+    rep=None
+    while not success:
+        try:
+            rep = b.get_available_balance()
+            success = True
+        except simplejson.scanner.JSONDecodeError:
+            pass
+
+    print "balance: %f" % (rep, )
+    reply = raw_input("Payout? ")
+    if reply.lower().startswith("y"):
+        addr = raw_input("Destination address(es)? ")
+        amount = raw_input("Amount(s)? ")
+        txid = None
+        success = False
+        while not success:
+            try:
+                txid = b.execute_payment(destination_address=addr, amount=amount)
+                success = True
+            except simplejson.scanner.JSONDecodeError:
+                pass
+
+        print "TXID is %s, check out https://chain.so/tx/DOGETEST/%s" % \
+                                                            (txid, txid)
